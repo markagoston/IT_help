@@ -37,3 +37,12 @@ dsadd group cn=sales,cn=users,dc=northwindtraders,dc=com
 
 **_To create a universal group named accounting in an organizational unit (OU) named Departments in a domain named northwindtraders.com, type:_**
 dsadd group cn=accounting,ou=departments,dc=northwindtraders,dc=com –scope u
+
+
+AZ OU MEGADÁSA BENTRŐL KIFELÉ!!!
+
+Felhasználó felvétele:
+dsadd user "CN=user1,OU=gyártás,OU=mérnökök,DC=minta,DC=helyi" -samid user1@minta.helyi 
+
+Csoport létrehozása:
+dsadd group "CN=gyártók,OU=gyártás,OU=mérnökök,DC=minta,DC=helyi" -scope g -secgrp yes -members "CN=user1,OU=gyártás,OU=mérnökök,DC=minta,DC=helyi"
