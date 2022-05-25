@@ -1,0 +1,79 @@
+Linux (ubuntu)szerver funkciók
+MYSQL szerver konfiguráció
+Szolgáltatáscsomag telepítése
+$ sudo apt update
+$ sudo apt install mysql-server
+
+Alapbeállítások
+Alapvető biztonsági beállítások a telepítés után: 
+$ sudo mysql_secure_installation utility
+- (root jelszó, távoli hozzáférés, tesztadatbázis létrehozása stb.)
+
+Tűzfalon (ha aktív) át kell engedni a mysql-t
+sudo ufw enable - tűzfal bekapcsolása
+sudo ufw allow mysql
+
+
+Szolgáltatás indítása
+A telepítés után, ha nem fut a szolgáltatás:
+sudo systemctl start mysql
+vagy
+sudo services mysql start
+
+Rendszerinduláskor automatikusan induljon a folyamat:
+sudo systemctl enable mysql
+Kérések hálózatának beállítása
+Konfigurációs fájl szerkesztése:
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld]
+user = mysql
+pid-file = /var/run/mysqld/mysqld.pid
+socket = /var/run/mysqld/mysqld.sock
+port = 3306
+datadir = /var/lib/mysql
+
+bind-address = x.x.x.x
+mysql-bind-address = x.x.x.x
+require_secure_transport = on - ha titkosított az átvitel, ez a sor is kell
+	ekkor a felhasználónak is kell egy kulcsot is generálni:
+sudo mysql_ssl_rsa_setup --uid=username
+
+
+-------------------
+x.x.x.x = 0.0.0.0
+x.x.x.x = *
+x.x.x.x = ::
+x.x.x.x = server_ip_cím
+-------------------
+
+
+Folyamat indítása/újraindítása
+$ sudo systemctl start mysql
+$ sudo systemctl restart mysql
+vagy
+$ sudo service mysql start
+$ sudo service mysql restart
+
+
+Információgyűjtés
+Szerverfolyamat állapota:
+$ service mysql status
+MYSQL shell
+Belépés a shell-be (korábban megadott root jelszóval):
+$ sudo mysql -u root –p
+
+Felhasználó beállítása távoli kapcsolathoz:
+mysql> CREATE USER 'username'@'remote_client_ip' IDENTIFIED BY 'password';
+Felhasználó csatlakozása bármely IP-ről:
+mysql> CREATE USER 'user'@'%' IDENTIFIED BY 'password';
+
+létező helyi felhasználó esetében:
+mysql> RENAME USER 'username'@'localhost' TO 'username'@'remote_client_ip';
+MYSQL shell
+Adatbázis jogok adása a felhasználónak:
+mysql> GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'username'@'remote_client_ip' WITH GRANT OPTION;
+vagy minden jog:
+GRANT ALL PRIVILEGES on *.* TO 'username'@'remote_client_ip' WITH GRANT OPTION;
+Jogosultság változások alkalmazása:
+mysql> FLUSH PRIVILEGES;
