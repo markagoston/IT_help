@@ -1,0 +1,74 @@
+Linux (ubuntu)szerver funkciók
+SAMBA fájlmegosztás konfiguráció
+Szolgáltatáscsomag telepítése
+$ sudo apt update
+$ sudo apt install samba
+
+Konfigurációs fájl: 
+/etc/samba/smb.conf
+Konfigurációs fájl szerkesztése
+A konfigurációs lehetőségek listája:https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
+
+/etc/samba/smb.conf – a fájl végére beírva létre kell hozni egy új megosztást
+[Kozos] - megosztás neve
+path = /home/ISKOLA – megosztott mappa elérési útja
+browsable = yes - a hálózaton tallózható a mappa
+write list = @tanarok, diak1 - írási-olvasási jogokkal rendelkező csoportok (csoport neve elé @ kell) és felhasználók listája
+read list = @diakok - csak olvasási joggal rendelkezők
+Konfigurációs fájl szerkesztése folytatás
+force create mode = 0775 – a megosztott mappában létrehozott fájl alap jogosultságainak kényszerítése
+create mask = 0775 – a létrehozott fájl alap jogosultságai
+A create mask és force create mode egyszerre kell, hogy helyes maszkot kapjon!
+directory mask = 0775 - a megosztott mappában létrehozott mappa alap jogosultságai
+Konfigurációs fájl szerkesztése folytatás
+valid users = @tanarok - csak a megadott csoportok és felhasználók csatlakozhatnak a szolgáltatáshoz
+invalid users = @diakok – a megadott csoportok és felhasználók nem csatlakozhatnak a szolgáltatáshoz
+force group = tanarok - aki csatlakozik a szolgáltatáshoz, automatikusan ennek a csoportnak a tagja lesz, és megkapja a jogosultságait
+
+SAMBA felhasználók kezelése
+A SAMBA-hoz a normál felhasználóktól független, külön felhasználókat kell létrehozni (név és jelszó).
+$sudo smbpasswd -a tanar1 – tanar1 felhasználó hozzáadása
+jelszó megadása
+
+A jelszavak a következő helyen tárolódnak:
+/var/lib/samba/private/passdb.tdb
+SAMBA felhasználók kezelése
+Törlés:
+$ smbpasswd -x diak1
+
+Letiltás:
+$ smbpasswd -d diak1
+
+Engedélyezés:
+$ smbpasswd -e diak1
+SAMBA felhasználók listázása
+Felhasználók listázása:
+pdbedit –L
+vagy
+smbstatus
+
+Több info:
+pdbedit -L -w
+pdbedit -L -v
+Windows hálózati meghajtó csatlakoztatás
+net use X: \\10.0.0.99\kozos 12345 /user:diak1
+Windows felhasználó váltás parancssorból
+A meglévő kapcsolatok törlése
+net use \\10.0.0.99\IPC$ /delete
+
+A diak1 nevű 123 jelszavú felhasználó csatlakoztatása
+net use \\10.0.0.99\IPC$ 123 /user:diak1
+Folyamat indítása/újraindítása
+sudo systemctl start smbd
+sudo systemctl restart smbd
+vagy
+sudo service smbd start
+sudo service smbd restart
+
+
+Információgyűjtés
+Szerverfolyamat állapota:
+$ service smbd status
+$ systemctl status smbd
+
+
