@@ -1,0 +1,39 @@
+Dsadd user
+
+Syntax
+dsadd user <UserDN> [-samid <SAMName>] [-upn <UPN>] [-fn <FirstName>] [-mi <Initial>] [-ln <LastName>] [-display <DisplayName>] [-empid <EmployeeID>] [-pwd {<Password> | *}] [-desc <Description>] [-memberof <Group> ...] [-office <Office>] [-tel <PhoneNumber>] [-email <Email>] [-hometel <HomePhoneNumber>] [-pager <PagerNumber>] [-mobile <CellPhoneNumber>] [-fax <FaxNumber>] [-iptel <IPPhoneNumber>] [-webpg <WebPage>] [-title <Title>] [-dept <Department>] [-company <Company>] [-mgr <Manager>] [-hmdir <HomeDirectory>] [-hmdrv <DriveLetter>:][-profile <profilepath>] [-loscr <ScriptPath>] [-mustchpwd {yes | no}] [-canchpwd {yes | no}] [-reversiblepwd {yes | no}] [-pwdneverexpires {yes | no}] [-acctexpires <NumberOfDays>] [-disabled {yes | no}] [{-s <Server> | -d <Domain>}] [-u <UserName>] [-p {<Password> | *}] [-q] [{-uc | -uco | -uci}]
+
+Example
+
+dsadd user cn=MikeDan,cn=users,dc=northwindtraders,dc=com -disabled no
+
+**_To create an enabled user account named John Smith with a password of C^h3Bdo9# that must be changed at first logon, in an organizational unit (OU) named SouthEmployees in a domain named northwindtraders.com, type:_**
+dsadd user “cn=John Smith,ou=SouthEmployees,dc=northwindtraders,dc=com” -disabled no –pwd C^h3Bdo9# -mustchpwd yes
+
+**_To create the same account, with a set it to never expire, and make it a member of the Janitors group in the same OU, type:_**
+dsadd user “cn=John Smith,ou=SouthEmployees,dc=northwindtraders,dc=com” -disabled no –pwd C^h3Bdo9# -mustchpwd yes -memberof cn=janitors,ou=SouthEmployees,dc=northwindtraders,dc=com -acctexpires never
+
+Dsadd computer
+
+Syntax
+dsadd computer <ComputerDN> [-samid <SAMName>] [-desc <Description>] [-loc <Location>] [-memberof <GroupDN ...>] [{-s <Server> | -d <Domain>}] [-u <UserName>] [-p {<Password> | *}] [-q] [{-uc | -uco | -uci}]
+
+Examples
+
+**_To create a computer account named client01 in the default Computers container of northwindtraders.com, type:_**
+
+dsadd computer cn=client01,cn=computers,dc=northwindtraders,dc=com
+
+Dsadd group
+
+Syntax
+dsadd group <GroupDN> [-secgrp {yes | no}] [-scope {l | g | u}] [-samid <SAMName>] [-desc <Description>] [-memberof <Group> ...] [-members <Member> ...] [{-s Server> | -d <Domain>}] [-u <UserName>] [-p {<Password> | *}] [-q] [{-uc | -uco | -uci}]
+
+Examples
+
+**_To create a group account named Sales in the default Users container of northwindtraders.com, type:_**
+
+dsadd group cn=sales,cn=users,dc=northwindtraders,dc=com
+
+**_To create a universal group named accounting in an organizational unit (OU) named Departments in a domain named northwindtraders.com, type:_**
+dsadd group cn=accounting,ou=departments,dc=northwindtraders,dc=com –scope u
