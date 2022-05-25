@@ -1,0 +1,76 @@
+Linux (ubuntu)szerver funkciók
+WEB szerver konfiguráció
+Szolgáltatáscsomag telepítése
+$ sudo apt update
+$ sudo apt install apache2
+
+Konfigurációs mappák: 
+/var/www/sajátweblap
+/etc/apache2/sites-available/
+/etc/apache2/sites-enabled/
+Weblap létrehozása
+Saját weblap mappája:
+$ mkdir /var/www/sajatweblap
+
+HTML fájl létrehozása:
+$ nano /var/www/sajatweblap/sajat.hmtl
+Konfigurációs fájl
+Sablon konfigurációs fájl használata:
+$ cp /etc/apache2/sites-available/000-default.conf sajatweblap.conf
+
+Saját konfigurációs fájl szerkesztése:
+$ nano /etc/apache2/sites-available/sajatweblap.conf
+
+Konfigurációs fájl
+sajatweblap.conf:
+$ ServerAdmin email-cím
+$ DocumentRoot /var/www/sajatweblap/ - az index.html helye
+$ ServerName név.tartomány - pl (sajat.contoso.com), amivel elérhetjük a sajat.tartomány néven
+Ha nem akarunk tartományt használni, hanem pl csak sajat.com néven kell elérni a weblapot, akkor a DNS zóna neve a DNS utótag legyen pl (com), és a ServerName sajat.com
+$ ServerAlias név2.tartomány - pl weblap elérhető a megadott néven is pl. (sajat2.com)
+ServerAlias-ból több is lehet, és ezeket a neveket a DNS rekordok közé is fel kell venni.
+Weboldal aktiválása
+/etc/apache2/sites-available - még nem elérhető, de létező webszerverek
+/etc/apache2/sites-enabled – elérhető webszerverek
+
+Inaktiváljuk a sablon Apache weblapot:
+$ a2dissite 000-default.conf
+
+Elérés bekapcsolása:
+a konfigurációs fájlt a sites-available mappából átmásoluka sites-enabled mappába
+vagy használjuk a következő parancsot, amely ezt elvégzi:
+$ a2ensite sajatweblap.conf
+DNS rekord az eléréshez
+A már konfigurált DNS szerveren a HTML fáljt hozzáadni a DNS rekordokhoz:
+/etc/bind/db.sajat.com
+
+;
+;
+;
+$TTL    604800
+@       IN      SOA     ns.tartomany.com. admin.tartomany.com. (
+                              2        ; Serial
+                         604800        ; Refresh
+                          86400        ; Retry
+                        2419200        ; Expire
+                         604800 )      ; Negative Cache TTL
+;DNS rekordok
+@       IN      NS      ns.sajat.com.
+weblapDNSneve      IN      A       10.0.0.99 - a ServerName-ben megadott előtag (tartomány nélül) 						pl sajat
+
+A weblap elérhető a weblapDNSneve.tartomany.com címen
+
+Folyamat indítása/újraindítása
+sudo systemctl start apache2
+sudo systemctl restart apache2
+vagy
+sudo service apache2 start
+sudo service apache2 restart
+
+
+Információgyűjtés
+Szerverfolyamat állapota:
+$ service apache2 status
+$ systemctl status apache2
+
+
