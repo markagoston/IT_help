@@ -1,0 +1,113 @@
+Linux (ubuntu)szerver funkciók
+DNS szerver konfiguráció
+Szolgáltatáscsomag telepítése
+$ sudo apt update
+$ sudo apt install bind9
+
+Konfigurációs fájl: 
+/etc/bind/named.conf.options
+/etc/resolve.conf
+Hálózatok figyelése
+$ nano /etc/bind/named.conf.options
+
+listen-on {
+10.10.10.0/24;
+10.1.0.0/16;
+...
+};
+
+Ne csak a helyi kéréseket fogadja:
+allow-query { any; };
+Továbbítók megadása
+forwarders {
+8.8.8.8;
+8.8.4.4;
+};
+Névfeloldó rendszerfájl
+/etc/resolve.conf:
+nameserver 10.0.0.99
+- ha kitöröljük, akkor a netplan beállításai a mérvadóak, küldönben ez felülírja a netplan-t
+
+search sajat.com
+- az állomásnevek a tartománynév-kiegészítés nélkül elérhetők
+
+
+DNS zóna létrehozása
+sudo nano /etc/bind/named.conf.local
+
+zone "domain-name.com" {
+        type master;
+        file "/etc/bind/db.domain-name.com";
+        allow-transfer { 10.1.1.10; };
+        also-notify { 10.1.1.10; };
+};
+DNS zóna paraméterek
+type lehet master, slave, forward, hint
+master: elsődleges név rekordok szervere
+slave: az elsődleges rekordok másolata van a szerveren
+forward: minden kérést továbbít másik szervernek
+hint: gyökér névszervereket tárol
+file – az új zóna útvonalának fájlja
+allow-transfer - DNS szerverek listája, amelyek ezt a zónát 	továbbíthatják
+also-notify – az elsődleges DNS szerver értesíti ezeket a szervereket a zóna változásokról
+
+DNS rekordok létrehozása
+Sablonként használható fájl:
+/etc/bind/db.local
+
+Nevezzük át a saját tartományukhoz:
+$ sudo cp /etc/bind/db.local /etc/bind/db.domain-name.com
+DNS rekordok létrehozása
+/etc/bind/db.domain-name.com
+
+;
+;
+;
+$TTL    604800
+@       IN      SOA     ns.domain-name.com. admin.domain-name.com. (
+                              2        ; Serial
+                         604800        ; Refresh
+                          86400        ; Retry
+                        2419200        ; Expire
+                         604800 )      ; Negative Cache TTL
+;DNS rekordok
+@       IN      NS      ns.domain-name.com.
+ns      IN      A       10.0.0.99  - a szerver a tartományon belül
+gepnev  IN      A       10.0.0.15  - további állomások
+DNS rekordok
+hostname	class	type	value
+@	IN	NS	ns.domain-name.com.
+@	IN	A	10.1.1.1
+Ns	IN	A	10.1.1.9
+Ns2	IN	A	10.1.1.10
+Mx	IN	A	10.1.1.15
+
+
+hostname: az állomás neve(pl. ns.domain-name.com);
+class: IN (Internet), a hálózat típusa;
+type: DNS rekord típus 
+A – állomás
+NS – névszerver
+MX – levelezőszerver
+CNAME – álnév(alias)/canonical name
+TXT – szöveges leírás
+value: IP cím (állomásé), host name (tartománynév álnévhez), text (szöveg)
+
+Folyamat indítása/újraindítása
+Remote Name Daemon Control
+rndc reload
+
+sudo service named start
+sudo service named restart
+vagy
+sudo systemctl start named
+sudo systemctl restart named
+
+Információgyűjtés
+Szerverfolyamat állapota:
+$ service bind9 status
+vagy
+$ service named status
+
+Konfiguráció ellenőrzése:
+sudo named-checkconf
