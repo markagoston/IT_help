@@ -1,0 +1,49 @@
+Linux (ubuntu)szerver funkciók
+Alapvető parancsok
+Futtatás rendszergazdaként
+Sok olyan parancs van, amelyhez rendszergazda jogosultságra van szükség.
+A nem rendszergazda felhasználók is rendelkezhetnek ilyen joggal.
+Ehhez egy sudoers nevű csoportnak kell a tagjának lenni.
+Ebben az esetben a parancsok elé a sudo kulcsszót írva rendszergazda jogosultsággal fut a parancs.
+pl.
+sudo apt update
+
+Bármely parancs súgója:
+$parancs --help
+Parancs kiegészítés
+A parancsokat és paramétereiket nem szükséges teljesen begépelni.
+Részleges szöveg beírásakor TAB billentyűvel kiegészíthető a teljes kulcsszóra vagy paraméterre.
+pl.
+sudo apt upd  ->TAB = sudo apt update
+cd /h ->TAB = cd /home/
+
+Fájl- és mappanevek esetében is működik.
+
+IP cím lekérdezése
+Az ip addr paranccsal lekérdezhető az aktuális IP konfiguráció.
+
+legfontosabb információk:
+interfész azonosító - pl eth0, amelyet bizonyos szerverfunkciók esetében meg kell adni (pl. dhcp szerver)
+IP cím, maszk, átjáró - teljes vagy relatív elérési út megadható a fájlnévhez.
+grep "nameserver" /etc/resolv.conf - DNS szerver címének lekérdezése
+IP cím beállítása
+A beállításhoz alap programokat, illetve ezek konfigurációs fájljait lehet használni.Ilyen pl. a netplan vagy a net-tools
+
+netplan esetében a konfigurációs fájlja szerkesztésével állítható az IP konfiguráció.
+konfigurációs fájl:
+/etc/netplan/00-installer-config.yaml
+Ezt kell szerkesztésre megnyitni (pl nano-val).
+netplan konfigurációs fájl
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: no
+      addresses:
+      - 192.168.1.25/24
+      - "2001:1::1/64"
+      gateway4: 192.168.1.1
+      gateway6: "2001:1::2"
+      nameservers:
+        addresses:
+        - 8.8.8.8
