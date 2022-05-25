@@ -1,0 +1,155 @@
+Linux (ubuntu)szerver funkciók
+Fájlkezelés
+Jogosultságkezelés
+Váltás mappák között
+cd mappa1 - váltás a mappa1 nevű mappába, amely 			az atuális mappában található.
+cd / - váltás a meghajtó gyökerébe (root).
+cd .. - váltás egy mappával feljebbi szintre az aktuálisból.
+cd mappa1/mappa2 - megadható több szintű relatív elérési út, az aktuális mappából kiindulva. Azaz váltás a mappa1-en belül található mappa2-be.
+cd ../mappa1 - váltás az aktuális mappához képest egy szintel feljebb található mappa1-be.
+cd /mappa1/mappa2 - megadható teljes elérési út a gyökér mappából kiindulva.
+Mappa tartalmának listázása
+ls - aktuális mappa tartalmának kilistázása
+ls -l - aktuális mappa tartalmának kilistázása részletekkel (pl. jogosultságok és tulajdonosok)
+
+
+Mappa létrehozása
+$mkdir teszt1 //Az aktuális mappában létrehoz egy új mappát teszt1 néven
+$mkdir /var/www/teszt1 //A gyökér mappából kiindulva a var/www mappában hozza létre a teszt1 mappát. Tehát teljes elérési út megadható bármelyik mappa is legyen az aktuális
+$mkdir teszt1/teszt2 //Az aktuális mappában található teszt1 mappán belül létrehoz egy új mappát teszt1 néven. Tehát relatív útvonallal is megadható
+
+
+Mappa kezelése (törlés)
+$rmdir teszt1 //Az aktuális mappában kitörli a NEMÜRES teszt1 névű mappát.
+$rmdir /var/www/teszt1 //Teljes elérési út megadható.
+$rmdir teszt1/teszt2 //Relatív útvonallal is megadható.
+
+$rm –R teszt1 //Ha NEM üres a mappa, akkor a fájlokat is törlő rm parancs rekurzív futtatásával törölhető (teljes tartalmával együtt).
+Rekurzív futtatás: a parancs többször lefuttatja önmagát, amíg talál feldolgozni való adatot
+
+Mappa kezelése (másolás)
+$cp teszt2 teszt1/ //Az aktuális mappában lévő teszt2 mappát (teljes tartalmával) átmásolja az aktuális mappában lévp teszt1 mappába.
+$cp /var/www/teszt1 /var/www/teszt2 //Teljes elérési út megadható. A teszt1 mappa másolásra kerül a /var/www/teszt2 mappába.
+$rmdir teszt1/teszt2 teszt3/ //Relatív útvonallal is megadható. Az aktuális mappában található teszt1-ben lévő teszt2 mappa másolásra kerül a az aktuális mappában lévő teszt3 mappába.
+Mappa kezelése (áthelyezés, átnevezés)
+$mv teszt2 teszt1 //Az aktuális mappában lévő teszt2 mappát átnevezi tesz1-re.
+$mv /var/www/teszt1 /var/www/teszt2 //Teljes elérési út megadható. 
+$mv teszt1 /var/www/teszt2 //Másik célmappa esetén áthelyezésre kerül a forrásmappa. A teszt1 mappa bekerül a /var/www/teszt2 mappába. 
+
+Fájl létrehozása
+A nano program egy egyszerű szöveges szerkesztő (mint pl a notepad). Többek között a programok konfigurációs fáljlai szövegesek, ezért ideális a szekesztésükre.
+$nano teszt1.txt //teszt1.txt nevű fájl megnyitása szerkesztésre
+$nano /var/www/teszt1.txt //Teljes vagy relatív elérési út is megadható.
+
+Fájl szerkesztése
+A megnyitott fájlban a kurzorbillenytűs navigáción túl a következő funkciók érhetőek el.
+Ctrl+O //Változások mentése
+Ctrl+X //Kilépés – ha kilépés előtt nem mentünk, akkor rákérdez, hogy akarunk-e menteni.
+
+Shift+bal/jobb nyíl //betűk kijelölése
+Ctrl+Shift+bal/jobb nyíl //szavak kijelölése
+Shift+le/fel nyíl //sorok kijelölése
+vagy
+Windows_gomb+A //Kijelölés módba vált, így az előző 					   billentyűkombinációkból elhagyható a Shift
+
+Windows_gomb+6 //Kijelölt szövegrész másolása
+Ctrl+K //Kijelölt szövegrész kivágása
+Ctrl+U //Vágólapon lévő szöveg beillesztése az aktuális kurzorpozícióra
+Windows_gomb+U //Visszavonás
+Windows_gomb+E //Mégis (visszavonás visszavonása)
+
+Jogosultságok
+Fájloknak és mappáknak állítható, hogy ki és milyen módon férhessen hozzá.
+
+Egy fájlnak vagy mappának 3 különböző jogosultsági köre van:
+user //az a felhasználó, aki a fáljt létrehozta (tulajdonos)
+group //a fájlhoz hozzáférő csoport
+other //az előzőn kívül mindenki más
+
+Ezen jogkörök külön hozzáféréssel konfigurálhatók
+
+Jogosultságok
+Az egyes jogköröknek 3 művelethez lehet joga.
+
+read //olvasási jog – fájl listázható, megnyitható olvasásra, mappába bele lehet menni.
+write //írási jog – fájl/mappa létrehozása és felülírása
+execute //futtatási jog – fájl futtatható pl. egy python program
+Jogosultságok
+A fájl vagy mappa aktuális jogosultsága a részletes mappalistázással látható.
+
+Jogosultságok
+A fájl vagy mappa aktuális jogosultsága a részletes mappalistázással látható.
+
+Tulajdonos és csoport beállítása
+A fájl vagy mappa tulajdonosi (létrehozó) jogköre átruházható másik felhasználóra:
+$chown user2 teszt.txt //A teszt.txt fájl tulajdonosa (létrehozója) a user2 nevű felhasználó lesz.
+A fájl vagy mappa csoport-tagsága beállítható:
+$chgrp group2 teszt.txt //A teszt.txt fájl csoportja a group2 nevű csoport lesz.
+Jogosultságok kezelése
+A fájl vagy mappa jogosultságait a chmod paranccsal lehet megváltoztatni.
+pl. chmod u+rw teszt.txt
+
+Az első paraméter megadása:
+Első betű a jogkör rövidítése:
+u – user (létrehozó)
+g – group (csoport)
+o – other (mindenki más)
+Jogosultságok kezelése
+A fájl vagy mappa jogosultságait a chmod paranccsal lehet megváltoztatni.
+pl. chmod u+rw teszt.txt
+
+Az első paraméter megadása:
+Második karakter a műveletet adja meg:
++ – hozzáadunk jogosultságot
+- – visszavonunk jogosultságot
+= – a jogosultságlistát felülírjuk
+Jogosultságok kezelése
+A fájl vagy mappa jogosultságait a chmod paranccsal lehet megváltoztatni.
+pl. chmod u+rw teszt.txt
+
+Az első paraméter megadása:
+Harmadik karaktertől a jogosultságok betűjele:
+r – read (olvasás)
+w – write (írás)
+x – execute (futtatás)
+Jogosultságok kezelése példák
+chmod u+rw teszt.txt //A létrehozónak az eddigi jogain felül olvasási (r) és írási (w) jogot adunk.
+
+chmod o-wx teszt.txt //A csoporttól elvesszük az írási (w) és futtatási (x) jogot.
+
+chmod o=rwx teszt.txt //Bármi is volt mindenki más eddigi jogosultsága, az új jogosultság teljes hozzá férés (rwx) lesz a „mindenki más” jogkör számára.
+
+
+
+Jogosultságok kezelése számértékkel
+A különböző hozzáféreseknek van egy hozzárandelt számuk is:
+
+read = 4
+write = 2
+execute = 1
+
+Ezen számok összegeként lehet megadni a jogosultságot:
+Ha valakinek csak olvasási (read) jogot akarunk adni, akkor az összeg 4.
+Ha írási (write) és olvasási (read) jogot akarunk adni, akor az összeg 4+2 = 6.
+Stb.
+
+
+
+
+Jogosultságok kezelése számértékkel
+Egy szám egy jogkörnek állítja be a hozzáférését.
+3 jogkör van.
+Tehát 3 egymás utáni számmal minden jogkör beállítható.
+
+A számok sorrendje:
+tulajdonos
+csoport
+mindenki más
+Jogosultságok kezelése számértékkel
+Tehát a 750 számsorozat meghatározza:
+7 = minden jog 4(r)+2(w)+1(x) a tulajdonosnak.
+5 = olvasási és futtatási jog 4(r)+1(x) a csoportnak.
+0 = semmilyen joga nincs a „mindenki más” jogkörnek.
+
+A teljes parancs:
+$chmod 750 teszt1.txt
