@@ -1,0 +1,62 @@
+Linux (ubuntu)szerver funkciók
+DHCP szerver konfiguráció
+Szolgáltatáscsomag telepítése
+$ sudo apt update
+$ sudo apt install isc-dhcp-server
+
+Konfigurációs fájlok: 
+/etc/default/isc-dhcp-server
+/etc/dhcp/dhcpd.conf
+Kiszolgáló interfész (DHCPD)
+/etc/default/isc-dhcp-server
+Fájlban kell megadni, hogy melyik interfész (pl. eth0) várja a DHCP kéréseket
+INTERFACES="eth0"
+
+Alhálózat beállítása (DHCPD)
+Konfigurációs fájl szerkesztése:
+nano /etc/dhcp/dhcpd.conf
+
+Tartománynév és névszerver megadása:
+option domain-name "tecmint.lan";
+option domain-name-servers ns1.tecmint.lan, ns2.tecmint.lan;
+Alhálózat beállítása (DHCPD)
+Konfigurációs fájl szerkesztése:
+nano /etc/dhcp/dhcpd.conf
+
+Alhálózat megadása:
+subnet 192.168.1.0 netmask 255.255.255.0 {
+
+        option routers                  192.168.1.1;
+        option subnet-mask              255.255.255.0;
+        option broadcast-address        192.168.1.255;
+        option domain-name-servers      194.168.4.100;
+        option ntp-servers              192.168.1.1;
+        option netbios-name-servers     192.168.1.1;
+        option netbios-node-type 2;
+        default-lease-time 86400;
+        max-lease-time 86400;
+Alhálózat beállítása (DHCPD)
+Konfigurációs fájl szerkesztése:
+nano /etc/dhcp/dhcpd.conf
+
+Lefoglalt címek megadása:
+host név {
+                hardware ethernet DD:GH:DF:E5:F7:D7;
+                fixed-address 192.168.1.2;
+        }
+Folyamat indítása/újraindítása
+$ sudo systemctl start isc-dhcp-server
+$ sudo systemctl restart isc-dhcp-server
+vagy
+$ sudo service isc-dhcp-server start
+$ sudo service isc-dhcp-server restart
+
+
+Információgyűjtés
+Szerverfolyamat állapota:
+$ service dhcpd status
+
+Kiosztott címek listája:
+nano /var/lib/dhcp/dhcpd.leases
+vagy
+dhcp-lease-list
