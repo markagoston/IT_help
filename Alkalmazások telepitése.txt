@@ -1,0 +1,11 @@
+Linux (ubuntu)szerver funkciók
+Alkalmazások telepítése és eltávolítása
+Telepítés
+A parancshoz rendszergazda jogosultság szükséges, tehát használjuk a sudo-t.
+Az elérhető alkalmazások csomagjainak legfrissebb adatbázisát letöltjük:$sudo apt update 
+A telepítjük a kívánt alkalmazást:$sudo apt install csomag-neve - csomag-neve pl. mysql-server
+Az apt kérheti a telepítés jóváhagyását, amit egy ‚y’-al megtehetünk, vagy a parancs végére –y kapcsolót elhelyezve ez automatikusan megtörténik
+Eltávolítás
+A parancshoz rendszergazda jogosultság szükséges, tehát használjuk a sudo-t.
+Eltávolítjuk a kívánt alkalmazást:$sudo apt remove csomag-neve //csomag-neve pl. mysql-server
+Az apt kérheti az eltávolítás jóváhagyását, amit egy ‚y’-al megtehetünk, vagy a parancs végére –y kapcsolót elhelyezve ez automatikusan megtörténik
